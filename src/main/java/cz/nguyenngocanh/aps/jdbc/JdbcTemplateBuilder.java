@@ -1,18 +1,21 @@
 package cz.nguyenngocanh.aps.jdbc;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
 public class JdbcTemplateBuilder {
-    @ConfigurationProperties(prefix = "spring.datasource")
-    private DataSource getDataSource(){
-        return DataSourceBuilder.create().build();
+
+    public DataSource getNewDataSource(DataSourceConfig dataSourceConfig){
+        return DataSourceBuilder.create()
+                .url(dataSourceConfig.getUrl())
+                .username(dataSourceConfig.getUsername())
+                .password(dataSourceConfig.getPassword())
+                .build();
     }
 
-    public JdbcTemplate build(){
-        return new JdbcTemplate(getDataSource());
+    public JdbcTemplate build(DataSource dataSource){
+        return new JdbcTemplate(dataSource);
     }
 }
