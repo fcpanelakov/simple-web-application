@@ -1,5 +1,6 @@
 package cz.nguyenngocanh.aps.jdbc;
 
+import cz.nguyenngocanh.aps.model.DataSourceConfig;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 
