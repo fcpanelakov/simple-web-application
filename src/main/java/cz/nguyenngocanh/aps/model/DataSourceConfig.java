@@ -1,9 +1,6 @@
 package cz.nguyenngocanh.aps.model;
 
-import org.springframework.boot.jackson.JsonComponent;
-
-@JsonComponent
-public class DataSourceConfig implements HasId<String> {
+public class DataSourceConfig{
     public static final String TABLE_NAME = "CONNECTIONS";
     private String connectionName;
     private String url;
@@ -18,11 +15,6 @@ public class DataSourceConfig implements HasId<String> {
         this.url = url;
         this.username = username;
         this.password = password;
-    }
-
-    @Override
-    public String getId() {
-        return connectionName;
     }
 
     public String getConnectionName() {

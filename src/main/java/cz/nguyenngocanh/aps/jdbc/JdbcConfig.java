@@ -1,6 +1,7 @@
 package cz.nguyenngocanh.aps.jdbc;
 
 import cz.nguyenngocanh.aps.model.DataSourceConfig;
+import cz.nguyenngocanh.aps.rowmappers.DataSourceConfigRowMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -21,6 +22,11 @@ public class JdbcConfig {
     @Bean
     public JdbcTemplate setJdbcTemplate(DataSource dataSource, JdbcTemplateBuilder jdbcTemplateBuilder) {
         return jdbcTemplateBuilder.build(dataSource);
+    }
+
+    @Bean
+    public OracleDatabaseViewerManager setOracleDatabaseViewerManager(){
+        return new OracleDatabaseViewerManager();
     }
 
 }

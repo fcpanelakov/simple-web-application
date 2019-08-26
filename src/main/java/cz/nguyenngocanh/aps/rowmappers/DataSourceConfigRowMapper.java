@@ -1,4 +1,4 @@
-package cz.nguyenngocanh.aps.jdbc;
+package cz.nguyenngocanh.aps.rowmappers;
 
 import cz.nguyenngocanh.aps.model.DataSourceConfig;
 
@@ -11,7 +11,7 @@ public class DataSourceConfigRowMapper implements RowMapperPlusPara<DataSourceCo
     @Override
     public Map<String, Object> getParameters(DataSourceConfig dataSourceConfig) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("ID", dataSourceConfig.getId());
+        parameters.put("ID", dataSourceConfig.getConnectionName());
         parameters.put("CONNECTION_NAME", dataSourceConfig.getConnectionName());
         parameters.put("URL", dataSourceConfig.getUrl());
         parameters.put("USER_NAME", dataSourceConfig.getUsername());

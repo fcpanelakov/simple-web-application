@@ -1,4 +1,4 @@
-package cz.nguyenngocanh.aps.jdbc;
+package cz.nguyenngocanh.aps.rowmappers;
 
 
 import org.springframework.jdbc.core.RowMapper;

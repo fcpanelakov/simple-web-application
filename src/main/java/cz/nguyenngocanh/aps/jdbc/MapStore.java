@@ -1,6 +1,6 @@
 package cz.nguyenngocanh.aps.jdbc;
 
-import cz.nguyenngocanh.aps.model.HasId;
+import cz.nguyenngocanh.aps.rowmappers.RowMapperPlusPara;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import javax.sql.DataSource;
 import java.util.List;
 
-public class MapStore<K, V extends HasId<K>> {
+public class MapStore<K, V> {
     private JdbcTemplate jdbcTemplate;
     private RowMapperPlusPara<V> rowMapper;
     private String tableName;
