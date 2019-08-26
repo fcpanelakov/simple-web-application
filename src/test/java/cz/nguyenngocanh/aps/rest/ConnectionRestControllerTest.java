@@ -1,24 +1,18 @@
-package cz.nguyenngocanh.aps;
+package cz.nguyenngocanh.aps.rest;
 
+import cz.nguyenngocanh.aps.UnitTestBase;
 import cz.nguyenngocanh.aps.model.DataSourceConfig;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.unitils.reflectionassert.ReflectionAssert;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
-@TestPropertySource(locations = "classpath:application-test.properties")
-@RunWith(SpringRunner.class)
+
 public class ConnectionRestControllerTest extends UnitTestBase {
     private static final String CREATE_URL = "/connection/create";
     private static final String CONNECTION_LIST_URL = "/connection/list";
@@ -56,7 +50,7 @@ public class ConnectionRestControllerTest extends UnitTestBase {
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(DataSourceConfig.class)
+                .expectBody(new ParameterizedTypeReference<List<DataSourceConfig>>() {})
                 .returnResult();
 
         List<DataSourceConfig> testList = new ArrayList<>();

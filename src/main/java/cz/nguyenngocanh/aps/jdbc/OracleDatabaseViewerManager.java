@@ -14,7 +14,6 @@ public class OracleDatabaseViewerManager implements DatabaseViewerManager {
     private final String GET_TABLES = "SELECT TABLE_NAME FROM ALL_TABLES";
     private final String GET_COLUMNS = "SELECT COLUMN_NAME FROM USER_TAB_COLS WHERE TABLE_NAME = ?";
     private final String GET_PRIMARY_KEYS = "SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE FROM ALL_CONSTRAINTS WHERE TABLE_NAME = ?";
-    private final String GET_DATA_FROM_COLUMN = "SELECT ? FROM ?";
     private final String GET_COLUMN_DATA_TYPE = "SELECT DATA_TYPE FROM USER_TAB_COLS WHERE table_name = ? AND COLUMN_NAME = ?";
     private JdbcTemplate jdbcTemplate;
 
@@ -46,7 +45,7 @@ public class OracleDatabaseViewerManager implements DatabaseViewerManager {
         List<Column> columns = columnsNames
                 .stream()
                 .map(cName -> {
-                    List<String> data = jdbcTemplate.queryForList(GET_DATA_FROM_COLUMN, String.class, cName, tableName);
+                    List<String> data = jdbcTemplate.queryForList("SELECT " + cName + " FROM " + tableName, String.class);
                     String type = jdbcTemplate.queryForObject(GET_COLUMN_DATA_TYPE, String.class, tableName, cName);
                     return new Column()
                             .setColumnType(type)
