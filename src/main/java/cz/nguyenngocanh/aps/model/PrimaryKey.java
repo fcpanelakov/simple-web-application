@@ -1,5 +1,9 @@
 package cz.nguyenngocanh.aps.model;
 
+/**
+ * Column
+ * Primary key data type
+ */
 public class PrimaryKey {
     String name;
     String type;

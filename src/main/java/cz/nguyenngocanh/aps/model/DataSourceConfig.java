@@ -1,5 +1,9 @@
 package cz.nguyenngocanh.aps.model;
 
+/**
+ * DataSourceConfig
+ * Connection information of new database
+ */
 public class DataSourceConfig{
     public static final String TABLE_NAME = "CONNECTIONS";
     private String connectionName;

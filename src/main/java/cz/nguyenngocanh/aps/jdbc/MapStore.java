@@ -8,6 +8,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import javax.sql.DataSource;
 import java.util.List;
 
+/**
+ * MapStore
+ * Serve for manipulating with intern application database (CRUD)
+ */
 public class MapStore<K, V> {
     private JdbcTemplate jdbcTemplate;
     private RowMapperPlusPara<V> rowMapper;

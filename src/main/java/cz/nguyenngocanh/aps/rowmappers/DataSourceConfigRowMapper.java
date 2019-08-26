@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Row mapper for {@link DataSourceConfig}
+ */
 public class DataSourceConfigRowMapper implements RowMapperPlusPara<DataSourceConfig> {
     @Override
     public Map<String, Object> getParameters(DataSourceConfig dataSourceConfig) {

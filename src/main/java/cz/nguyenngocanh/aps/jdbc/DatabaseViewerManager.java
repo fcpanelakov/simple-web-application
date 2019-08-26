@@ -4,6 +4,10 @@ import cz.nguyenngocanh.aps.model.TableInformation;
 
 import java.util.List;
 
+/**
+ * DatabaseViewerManager
+ * Viewer manager interface
+ */
 public interface DatabaseViewerManager {
     List<String> getSchemas();
     List<String> getTables();

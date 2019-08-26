@@ -2,6 +2,13 @@ package cz.nguyenngocanh.aps.model;
 
 import java.util.List;
 
+/**
+ * TableInformation
+ * Information of specific table
+ * columnNumber - Number of columns of specific table
+ * primaryKeys - All primary keys of specific table
+ * columns - All columns of specific table
+ */
 public class TableInformation {
     Integer columnNumber;
     List<PrimaryKey> primaryKeys;

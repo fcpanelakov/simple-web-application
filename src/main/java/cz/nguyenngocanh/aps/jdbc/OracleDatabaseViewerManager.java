@@ -9,6 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * OracleDatabaseViewerManager
+ * Database viewer manager specific for ORACLE database
+ */
 public class OracleDatabaseViewerManager implements DatabaseViewerManager {
     private final String GET_SCHEMAS = "SELECT USERNAME AS SCHEMA_NAME FROM SYS.DBA_USERS";
     private final String GET_TABLES = "SELECT TABLE_NAME FROM ALL_TABLES";
@@ -22,21 +26,36 @@ public class OracleDatabaseViewerManager implements DatabaseViewerManager {
         return this;
     }
 
+    /**
+     * @return All schemas in database
+     */
     @Override
     public List<String> getSchemas(){
         return jdbcTemplate.queryForList(GET_SCHEMAS, String.class);
     }
 
+    /**
+     * @return All tables in database
+     */
     @Override
     public List<String> getTables(){
         return jdbcTemplate.queryForList(GET_TABLES, String.class);
     }
 
+    /**
+     * @param tableName - Name of specific table
+     * @return All columns of specific table
+     */
     @Override
     public List<String> getColumns(String tableName){
         return jdbcTemplate.queryForList(GET_COLUMNS, String.class, tableName);
     }
 
+    /**
+     *
+     * @param tableName - Name of specific table
+     * @return Table information, contains all his primary keys, number of columns, columns(type, data)
+     */
     @Override
     public TableInformation getTableInformation(String tableName){
         TableInformation tableInformation = new TableInformation();

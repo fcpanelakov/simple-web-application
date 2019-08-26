@@ -7,7 +7,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
-
+/**
+ * JdbcConfig
+ * Configurations for communication with databases
+ */
 public class JdbcConfig {
     @Bean
     public JdbcTemplateBuilder setTemplateBuilder() {

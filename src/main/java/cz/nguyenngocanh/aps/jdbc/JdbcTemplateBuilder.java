@@ -6,6 +6,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
+/**
+ * JdbcTemplateBuilder
+ * Builder for JdbcTemplate and DataSource
+ */
 public class JdbcTemplateBuilder {
 
     public DataSource getNewDataSource(DataSourceConfig dataSourceConfig){

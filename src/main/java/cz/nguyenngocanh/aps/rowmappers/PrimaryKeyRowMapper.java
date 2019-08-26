@@ -6,6 +6,9 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Row mapper for {@link PrimaryKey}
+ */
 public class PrimaryKeyRowMapper implements RowMapper<PrimaryKey> {
 
     @Override

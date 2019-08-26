@@ -12,7 +12,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.*;
 
-
+/**
+ * ConnectionRestControllerTest
+ */
 public class ConnectionRestControllerTest extends UnitTestBase {
     private static final String CREATE_URL = "/connection/create";
     private static final String CONNECTION_LIST_URL = "/connection/list";

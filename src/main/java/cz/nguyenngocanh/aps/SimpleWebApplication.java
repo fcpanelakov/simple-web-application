@@ -7,6 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
 
+/**
+ * SimpleWebApplication
+ * Simple web application for viewing another databases
+ */
 @Import({
         ConnectionRestController.class,
         JdbcConfig.class

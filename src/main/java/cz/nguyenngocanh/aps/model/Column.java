@@ -2,6 +2,10 @@ package cz.nguyenngocanh.aps.model;
 
 import java.util.List;
 
+/**
+ * Column
+ * Column data type
+ */
 public class Column {
     String columnType;
     List<String> data;
