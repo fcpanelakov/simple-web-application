@@ -17,7 +17,6 @@ public class MapStore<K, V> {
     private RowMapperPlusPara<V> rowMapper;
     private String tableName;
 
-
     public MapStore(RowMapperPlusPara<V> rowMapper, String tableName, DataSource dataSource, JdbcTemplateBuilder jdbcTemplateBuilder) {
         this.jdbcTemplate = jdbcTemplateBuilder.build(dataSource);
         this.rowMapper = rowMapper;

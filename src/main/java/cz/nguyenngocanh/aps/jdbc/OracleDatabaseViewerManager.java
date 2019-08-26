@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
  * Database viewer manager specific for ORACLE database
  */
 public class OracleDatabaseViewerManager implements DatabaseViewerManager {
-    private final String GET_SCHEMAS = "SELECT USERNAME AS SCHEMA_NAME FROM SYS.DBA_USERS";
-    private final String GET_TABLES = "SELECT TABLE_NAME FROM ALL_TABLES";
-    private final String GET_COLUMNS = "SELECT COLUMN_NAME FROM USER_TAB_COLS WHERE TABLE_NAME = ?";
-    private final String GET_PRIMARY_KEYS = "SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE FROM ALL_CONSTRAINTS WHERE TABLE_NAME = ?";
-    private final String GET_COLUMN_DATA_TYPE = "SELECT DATA_TYPE FROM USER_TAB_COLS WHERE table_name = ? AND COLUMN_NAME = ?";
+    private static final String GET_SCHEMAS = "SELECT USERNAME AS SCHEMA_NAME FROM SYS.DBA_USERS";
+    private static final String GET_TABLES = "SELECT TABLE_NAME FROM ALL_TABLES";
+    private static final String GET_COLUMNS = "SELECT COLUMN_NAME FROM USER_TAB_COLS WHERE TABLE_NAME = ?";
+    private static final String GET_PRIMARY_KEYS = "SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE FROM ALL_CONSTRAINTS WHERE TABLE_NAME = ?";
+    private static final String GET_COLUMN_DATA_TYPE = "SELECT DATA_TYPE FROM USER_TAB_COLS WHERE table_name = ? AND COLUMN_NAME = ?";
     private JdbcTemplate jdbcTemplate;
 
     public OracleDatabaseViewerManager setJdbcTemplate(JdbcTemplate jdbcTemplate) {

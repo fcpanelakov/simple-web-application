@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * DatabaseViewerManager
- * Viewer manager interface
+ * Database viewer manager interface
  */
 public interface DatabaseViewerManager {
     List<String> getSchemas();
