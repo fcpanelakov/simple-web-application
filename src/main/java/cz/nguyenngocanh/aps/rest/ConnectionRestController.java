@@ -3,9 +3,12 @@ package cz.nguyenngocanh.aps.rest;
 import cz.nguyenngocanh.aps.model.DataSourceConfig;
 import cz.nguyenngocanh.aps.jdbc.MapStore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 /**
@@ -51,5 +54,17 @@ public class ConnectionRestController {
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateConnection(@RequestBody DataSourceConfig dataSourceConfig) {
         connectionMap.update(dataSourceConfig.getConnectionName(), dataSourceConfig);
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public String sqlInConVioExceptionHandler(SQLIntegrityConstraintViolationException e){
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public String emptyResultDataAccessException(EmptyResultDataAccessException e){
+        return e.getMessage();
     }
 }

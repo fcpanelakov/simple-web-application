@@ -6,9 +6,12 @@ import cz.nguyenngocanh.aps.jdbc.OracleDatabaseViewerManager;
 import cz.nguyenngocanh.aps.model.DataSourceConfig;
 import cz.nguyenngocanh.aps.model.TableInformation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 /**
@@ -77,4 +80,15 @@ public class DatabaseViewerController {
         return oracleManager.getTableInformation(tableName);
     }
 
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public String sqlInConVioExceptionHandler(SQLIntegrityConstraintViolationException e){
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public String emptyResultDataAccessException(EmptyResultDataAccessException e){
+        return e.getMessage();
+    }
 }

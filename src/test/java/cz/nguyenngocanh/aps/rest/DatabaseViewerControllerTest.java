@@ -71,7 +71,6 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
         ReflectionAssert.assertReflectionEquals(expectedTables, tables.getResponseBody());
     }
 
-    //TODO: ASSERT
     @Test
     public void getColumnsControllerTest() {
         DataSourceConfig dataSourceConfig = new DataSourceConfig()
@@ -93,7 +92,6 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
         ReflectionAssert.assertReflectionEquals(expectedColumns, columns.getResponseBody());
     }
 
-    //TODO: ASSERT
     @Test
     public void getTableInfoControllerTest() {
         DataSourceConfig dataSourceConfig = new DataSourceConfig()

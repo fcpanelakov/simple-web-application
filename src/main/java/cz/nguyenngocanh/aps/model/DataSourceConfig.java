@@ -14,13 +14,6 @@ public class DataSourceConfig{
     public DataSourceConfig() {
     }
 
-    public DataSourceConfig(String connectionName, String url, String username, String password) {
-        this.connectionName = connectionName;
-        this.url = url;
-        this.username = username;
-        this.password = password;
-    }
-
     public String getConnectionName() {
         return connectionName;
     }
