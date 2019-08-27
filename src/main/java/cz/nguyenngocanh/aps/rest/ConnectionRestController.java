@@ -49,11 +49,12 @@ public class ConnectionRestController {
 
     /**
      * Update database connection
+     * @param id
      * @param dataSourceConfig
      */
-    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void updateConnection(@RequestBody DataSourceConfig dataSourceConfig) {
-        connectionMap.update(dataSourceConfig.getConnectionName(), dataSourceConfig);
+    @PostMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updateConnection(@PathVariable String id, @RequestBody DataSourceConfig dataSourceConfig) {
+        connectionMap.update(id, dataSourceConfig);
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)

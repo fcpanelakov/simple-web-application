@@ -19,7 +19,7 @@ public class ConnectionRestControllerTest extends UnitTestBase {
     private static final String CREATE_URL = "/connection/create";
     private static final String CONNECTION_LIST_URL = "/connection/list";
     private static final String DELETE_URL = "/connection/delete";
-    private static final String UPDATE_URL = "/connection/update";
+    private static final String UPDATE_URL = "/connection/update/firstConnection";
 
     @Test
     public void createControllerTest() {
@@ -93,7 +93,7 @@ public class ConnectionRestControllerTest extends UnitTestBase {
         ReflectionAssert.assertReflectionEquals(connectionMap.get("firstConnection"), dataSourceConfig);
 
         DataSourceConfig secondDataSourceConfig = new DataSourceConfig()
-                .setConnectionName("firstConnection")
+                .setConnectionName("secondConnection")
                 .setUrl("jdbc:h2:mem:testdb")
                 .setUsername("sa2")
                 .setPassword("password2");
@@ -106,6 +106,6 @@ public class ConnectionRestControllerTest extends UnitTestBase {
                 .exchange()
                 .expectStatus().isOk();
 
-        ReflectionAssert.assertReflectionEquals(connectionMap.get("firstConnection"), secondDataSourceConfig);
+        ReflectionAssert.assertReflectionEquals(connectionMap.get("secondConnection"), secondDataSourceConfig);
     }
 }

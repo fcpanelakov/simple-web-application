@@ -1,6 +1,7 @@
 package cz.nguyenngocanh.aps.rowmappers;
 
 import cz.nguyenngocanh.aps.model.DataSourceConfig;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +11,8 @@ import java.util.Map;
 /**
  * Row mapper for {@link DataSourceConfig}
  */
-public class DataSourceConfigRowMapper implements RowMapperPlusPara<DataSourceConfig> {
+public class DataSrcCDatabaseQueryConfig implements DatabaseQueryConfig<DataSourceConfig, String> {
+    private final String UPDATE_QUERY = "UPDATE " + DataSourceConfig.TABLE_NAME + " SET ID = ?, CONNECTION_NAME = ?, URL = ?, USER_NAME = ?, PASSWORD = ? WHERE ID = ? ";
     @Override
     public Map<String, Object> getParameters(DataSourceConfig dataSourceConfig) {
         Map<String, Object> parameters = new HashMap<>();
@@ -30,5 +32,22 @@ public class DataSourceConfigRowMapper implements RowMapperPlusPara<DataSourceCo
         dataSourceConfig.setPassword(resultSet.getString("PASSWORD"));
         dataSourceConfig.setUsername(resultSet.getString("USER_NAME"));
         return dataSourceConfig;
+    }
+
+    @Override
+    public PreparedStatementSetter updatePreparedStatement(String id, DataSourceConfig dataSourceConfig){
+        return  (ps) -> {
+                ps.setString(1, dataSourceConfig.getConnectionName());
+                ps.setString(2, dataSourceConfig.getConnectionName());
+                ps.setString(3, dataSourceConfig.getUrl());
+                ps.setString(4, dataSourceConfig.getUsername());
+                ps.setString(5, dataSourceConfig.getPassword());
+                ps.setString(6, String.valueOf(id));
+            };
+    }
+
+    @Override
+    public String getUpdateQuery() {
+        return UPDATE_QUERY;
     }
 }

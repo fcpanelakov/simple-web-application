@@ -1,7 +1,7 @@
 package cz.nguyenngocanh.aps.jdbc;
 
 import cz.nguyenngocanh.aps.model.DataSourceConfig;
-import cz.nguyenngocanh.aps.rowmappers.DataSourceConfigRowMapper;
+import cz.nguyenngocanh.aps.rowmappers.DataSrcCDatabaseQueryConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -19,7 +19,7 @@ public class JdbcConfig {
 
     @Bean
     public MapStore<String, DataSourceConfig> connectionMap(DataSource dataSource, JdbcTemplateBuilder jdbcTemplateBuilder) {
-        return new MapStore<>(new DataSourceConfigRowMapper(), DataSourceConfig.TABLE_NAME, dataSource, jdbcTemplateBuilder);
+        return new MapStore<>(new DataSrcCDatabaseQueryConfig(), DataSourceConfig.TABLE_NAME, dataSource, jdbcTemplateBuilder);
     }
 
     @Bean

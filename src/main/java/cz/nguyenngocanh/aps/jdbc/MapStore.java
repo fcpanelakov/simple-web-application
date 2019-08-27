@@ -1,6 +1,6 @@
 package cz.nguyenngocanh.aps.jdbc;
 
-import cz.nguyenngocanh.aps.rowmappers.RowMapperPlusPara;
+import cz.nguyenngocanh.aps.rowmappers.DatabaseQueryConfig;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class MapStore<K, V> {
     private JdbcTemplate jdbcTemplate;
-    private RowMapperPlusPara<V> rowMapper;
+    private DatabaseQueryConfig<V, K> rowMapper;
     private String tableName;
 
-    public MapStore(RowMapperPlusPara<V> rowMapper, String tableName, DataSource dataSource, JdbcTemplateBuilder jdbcTemplateBuilder) {
+    public MapStore(DatabaseQueryConfig<V, K> rowMapper, String tableName, DataSource dataSource, JdbcTemplateBuilder jdbcTemplateBuilder) {
         this.jdbcTemplate = jdbcTemplateBuilder.build(dataSource);
         this.rowMapper = rowMapper;
         this.tableName = tableName;
@@ -38,10 +38,14 @@ public class MapStore<K, V> {
     }
 
     public void update(K key, V value){
-        remove(key);
-        put(value);
+        jdbcTemplate.update(rowMapper.getUpdateQuery(), rowMapper.updatePreparedStatement(key, value));
     }
 
+    /**
+     * Get specific object from database
+     * @param key
+     * @return Specific object, if specific object is not in database return null
+     */
     public V get(K key){
         try {
             return jdbcTemplate.queryForObject("SELECT * FROM " + tableName + " WHERE ID = ?", rowMapper, key);
