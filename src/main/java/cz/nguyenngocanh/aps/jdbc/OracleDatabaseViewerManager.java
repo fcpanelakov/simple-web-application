@@ -4,6 +4,8 @@ import cz.nguyenngocanh.aps.model.Column;
 import cz.nguyenngocanh.aps.model.PrimaryKey;
 import cz.nguyenngocanh.aps.model.TableInformation;
 import cz.nguyenngocanh.aps.rowmappers.PrimaryKeyRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
  * Database viewer manager specific for ORACLE database
  */
 public class OracleDatabaseViewerManager implements DatabaseViewerManager {
+    private static final Logger log = LoggerFactory.getLogger(OracleDatabaseViewerManager.class);
     private static final String GET_SCHEMAS = "SELECT USERNAME AS SCHEMA_NAME FROM SYS.DBA_USERS";
     private static final String GET_TABLES = "SELECT TABLE_NAME FROM ALL_TABLES";
     private static final String GET_COLUMNS = "SELECT COLUMN_NAME FROM USER_TAB_COLS WHERE TABLE_NAME = ?";
@@ -31,6 +34,7 @@ public class OracleDatabaseViewerManager implements DatabaseViewerManager {
      */
     @Override
     public List<String> getSchemas(){
+        log.info("Get schemas started");
         return jdbcTemplate.queryForList(GET_SCHEMAS, String.class);
     }
 
@@ -39,6 +43,7 @@ public class OracleDatabaseViewerManager implements DatabaseViewerManager {
      */
     @Override
     public List<String> getTables(){
+        log.info("Get tables started");
         return jdbcTemplate.queryForList(GET_TABLES, String.class);
     }
 
@@ -48,6 +53,7 @@ public class OracleDatabaseViewerManager implements DatabaseViewerManager {
      */
     @Override
     public List<String> getColumns(String tableName){
+        log.info("Get columns started");
         return jdbcTemplate.queryForList(GET_COLUMNS, String.class, tableName);
     }
 
@@ -58,6 +64,7 @@ public class OracleDatabaseViewerManager implements DatabaseViewerManager {
      */
     @Override
     public TableInformation getTableInformation(String tableName){
+        log.info("Get table information started");
         TableInformation tableInformation = new TableInformation();
         List<PrimaryKey> primaryKeys = jdbcTemplate.query(GET_PRIMARY_KEYS, new PrimaryKeyRowMapper(), tableName);
         List<String> columnsNames = getColumns(tableName);

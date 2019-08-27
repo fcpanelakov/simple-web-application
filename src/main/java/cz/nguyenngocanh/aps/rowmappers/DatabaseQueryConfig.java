@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.util.Map;
 
 /**
+ * DatabaseQueryConfig
  * Row mapper plus parameters for simple insert
  * @param <V> Type of specific object
  * @param <K> Type of id of specific object

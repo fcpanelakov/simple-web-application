@@ -5,6 +5,8 @@ import cz.nguyenngocanh.aps.jdbc.MapStore;
 import cz.nguyenngocanh.aps.jdbc.OracleDatabaseViewerManager;
 import cz.nguyenngocanh.aps.model.DataSourceConfig;
 import cz.nguyenngocanh.aps.model.TableInformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/database")
 public class DatabaseViewerController {
+    private static final Logger log = LoggerFactory.getLogger(DatabaseViewerController.class);
     @Autowired
     private MapStore<String, DataSourceConfig> connectionMap;
     @Autowired
@@ -34,6 +37,7 @@ public class DatabaseViewerController {
      */
     @GetMapping(value = "/{connectionName}/schemas")
     public List<String> schemas(@PathVariable String connectionName){
+        log.info("Get schemas of database {} started", connectionName);
         DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
         DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
         oracleManager.setJdbcTemplate(jdbcTemplateBuilder.build(dataSource));
@@ -46,6 +50,7 @@ public class DatabaseViewerController {
      */
     @GetMapping(value = "/{connectionName}/tables")
     public List<String> tables(@PathVariable String connectionName){
+        log.info("Get tables of database {} started", connectionName);
         DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
         DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
         oracleManager.setJdbcTemplate(jdbcTemplateBuilder.build(dataSource));
@@ -60,6 +65,7 @@ public class DatabaseViewerController {
      */
     @GetMapping(value = "/{connectionName}/{tableName}/columns")
     public List<String> columns(@PathVariable String connectionName, @PathVariable String tableName){
+        log.info("Get columns of table {} in database {} started", tableName, connectionName);
         DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
         DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
         oracleManager.setJdbcTemplate(jdbcTemplateBuilder.build(dataSource));
@@ -74,6 +80,7 @@ public class DatabaseViewerController {
      */
     @GetMapping(value = "/{connectionName}/{tableName}/tableinfo")
     public TableInformation tableInformation(@PathVariable String connectionName, @PathVariable String tableName){
+        log.info("Get table information of table {} in database {} started", tableName, connectionName);
         DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
         DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
         oracleManager.setJdbcTemplate(jdbcTemplateBuilder.build(dataSource));

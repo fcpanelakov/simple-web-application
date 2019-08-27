@@ -2,6 +2,8 @@ package cz.nguyenngocanh.aps.rest;
 
 import cz.nguyenngocanh.aps.model.DataSourceConfig;
 import cz.nguyenngocanh.aps.jdbc.MapStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/connection")
 public class ConnectionRestController {
+    private static final Logger log = LoggerFactory.getLogger(ConnectionRestController.class);
     @Autowired
     private MapStore<String, DataSourceConfig> connectionMap;
 
@@ -27,6 +30,7 @@ public class ConnectionRestController {
      */
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createNewConnection(@RequestBody DataSourceConfig dataSourceConfig) {
+        log.info("Insert datasource config started");
         connectionMap.put(dataSourceConfig);
     }
 
@@ -44,7 +48,8 @@ public class ConnectionRestController {
      */
     @DeleteMapping(value = "/delete/{connectionName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void deleteConnection(@PathVariable String connectionName) {
-            connectionMap.remove(connectionName);
+        log.info("Delete datasource config started");
+        connectionMap.remove(connectionName);
     }
 
     /**
@@ -54,6 +59,7 @@ public class ConnectionRestController {
      */
     @PostMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateConnection(@PathVariable String id, @RequestBody DataSourceConfig dataSourceConfig) {
+        log.info("Update datasource config started");
         connectionMap.update(id, dataSourceConfig);
     }
 

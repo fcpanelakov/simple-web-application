@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * DataSrcCDatabaseQueryConfig
  * Row mapper for {@link DataSourceConfig}
  */
 public class DataSrcCDatabaseQueryConfig implements DatabaseQueryConfig<DataSourceConfig, String> {
