@@ -23,13 +23,14 @@ public class ConnectionRestControllerTest extends UnitTestBase {
 
     @Test
     public void createControllerTest() {
+        connectionMap.clear();
         DataSourceConfig dataSourceConfig = new DataSourceConfig()
                 .setConnectionName("firstConnection")
                 .setUrl("jdbc:h2:mem:testdb")
                 .setUsername("sa")
                 .setPassword("password");
 
-      webTestClient.post()
+        webTestClient.post()
                 .uri(CREATE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -45,14 +46,14 @@ public class ConnectionRestControllerTest extends UnitTestBase {
                 .setUrl("jdbc:h2:mem:testdb")
                 .setUsername("sa")
                 .setPassword("password");
-        connectionMap.put(dataSourceConfig);
 
         EntityExchangeResult<List<DataSourceConfig>> result = webTestClient.get()
                 .uri(CONNECTION_LIST_URL)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(new ParameterizedTypeReference<List<DataSourceConfig>>() {})
+                .expectBody(new ParameterizedTypeReference<List<DataSourceConfig>>() {
+                })
                 .returnResult();
 
         List<DataSourceConfig> testList = new ArrayList<>();
@@ -62,14 +63,6 @@ public class ConnectionRestControllerTest extends UnitTestBase {
 
     @Test
     public void deleteConnectionControllerTest() {
-        DataSourceConfig dataSourceConfig = new DataSourceConfig()
-                .setConnectionName("firstConnection")
-                .setUrl("jdbc:h2:mem:testdb")
-                .setUsername("sa")
-                .setPassword("password");
-
-        connectionMap.put(dataSourceConfig);
-
         Assert.assertNotNull(connectionMap.get("firstConnection"));
 
         webTestClient.delete()
@@ -89,7 +82,6 @@ public class ConnectionRestControllerTest extends UnitTestBase {
                 .setUsername("sa")
                 .setPassword("password");
 
-        connectionMap.put(dataSourceConfig);
         ReflectionAssert.assertReflectionEquals(connectionMap.get("firstConnection"), dataSourceConfig);
 
         DataSourceConfig secondDataSourceConfig = new DataSourceConfig()

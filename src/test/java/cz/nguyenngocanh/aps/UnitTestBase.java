@@ -31,5 +31,12 @@ public abstract class UnitTestBase {
     @Before
     public void init(){
         connectionMap.clear();
+
+        DataSourceConfig dataSourceConfig = new DataSourceConfig()
+                .setConnectionName("firstConnection")
+                .setUrl("jdbc:h2:mem:testdb")
+                .setUsername("sa")
+                .setPassword("password");
+        connectionMap.put(dataSourceConfig);
     }
 }

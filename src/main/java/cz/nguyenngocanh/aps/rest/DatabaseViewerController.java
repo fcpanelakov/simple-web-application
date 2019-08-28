@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class DatabaseViewerController {
      * @return All schemas of specific connection
      */
     @GetMapping(value = "/{connectionName}/schemas")
-    public List<String> schemas(@PathVariable String connectionName){
+    public List<String> schemas(@PathVariable String connectionName) {
         log.info("Get schemas of database {} started", connectionName);
         DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
         DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
@@ -49,7 +50,7 @@ public class DatabaseViewerController {
      * @return All tables of specific connection
      */
     @GetMapping(value = "/{connectionName}/tables")
-    public List<String> tables(@PathVariable String connectionName){
+    public List<String> tables(@PathVariable String connectionName) {
         log.info("Get tables of database {} started", connectionName);
         DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
         DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
@@ -58,13 +59,12 @@ public class DatabaseViewerController {
     }
 
     /**
-     *
      * @param connectionName - Name of connection of specific database
-     * @param tableName - Name of the table that we wanna get information from
+     * @param tableName      - Name of the table that we wanna get information from
      * @return Columns of specific table
      */
     @GetMapping(value = "/{connectionName}/{tableName}/columns")
-    public List<String> columns(@PathVariable String connectionName, @PathVariable String tableName){
+    public List<String> columns(@PathVariable String connectionName, @PathVariable String tableName) {
         log.info("Get columns of table {} in database {} started", tableName, connectionName);
         DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
         DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
@@ -73,13 +73,12 @@ public class DatabaseViewerController {
     }
 
     /**
-     *
      * @param connectionName - Name of connection of specific database
-     * @param tableName - Name of the table that we wanna get information from
+     * @param tableName      - Name of the table that we wanna get information from
      * @return Information of specific table
      */
     @GetMapping(value = "/{connectionName}/{tableName}/tableinfo")
-    public TableInformation tableInformation(@PathVariable String connectionName, @PathVariable String tableName){
+    public TableInformation tableInformation(@PathVariable String connectionName, @PathVariable String tableName) {
         log.info("Get table information of table {} in database {} started", tableName, connectionName);
         DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
         DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
@@ -87,15 +86,75 @@ public class DatabaseViewerController {
         return oracleManager.getTableInformation(tableName);
     }
 
+    /**
+     * @param connectionName - Name of connection of specific database
+     * @param tableName      - Name of the table that we wanna get information from
+     * @param columnName     - Name of column that we wanna get median
+     * @return Median of specific column
+     */
+    @GetMapping(value = "/{connectionName}/{tableName}/{columnName}/median")
+    public BigDecimal getMedian(@PathVariable String connectionName, @PathVariable String tableName, @PathVariable String columnName) {
+        log.info("Get median of column {} in table {} in database {} started", columnName, tableName, connectionName);
+        DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
+        DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
+        oracleManager.setJdbcTemplate(jdbcTemplateBuilder.build(dataSource));
+        return oracleManager.getTableInformation(tableName)
+                .getColumns()
+                .stream()
+                .filter(c -> c.getColumnName().equals(columnName))
+                .findFirst().get()
+                .getDataMedianValue();
+    }
+
+    /**
+     * @param connectionName - Name of connection of specific database
+     * @param tableName      - Name of the table that we wanna get information from
+     * @param columnName     - Name of column that we wanna get max
+     * @return Maximum value of specific column
+     */
+    @GetMapping(value = "/{connectionName}/{tableName}/{columnName}/max")
+    public BigDecimal getMaxValue(@PathVariable String connectionName, @PathVariable String tableName, @PathVariable String columnName) {
+        log.info("Get max value of column {} in table {} in database {} started", columnName, tableName, connectionName);
+        DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
+        DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
+        oracleManager.setJdbcTemplate(jdbcTemplateBuilder.build(dataSource));
+        return oracleManager.getTableInformation(tableName)
+                .getColumns()
+                .stream()
+                .filter(c -> c.getColumnName().equals(columnName))
+                .findFirst().get()
+                .getDataMaxValue();
+    }
+
+    /**
+     * @param connectionName - Name of connection of specific database
+     * @param tableName      - Name of the table that we wanna get information from
+     * @param columnName     - Name of column that we wanna get min
+     * @return Minimum value of specific column
+     */
+    @GetMapping(value = "/{connectionName}/{tableName}/{columnName}/min")
+    public BigDecimal getMinValue(@PathVariable String connectionName, @PathVariable String tableName, @PathVariable String columnName) {
+        log.info("Get min value of column {} in table {} in database {} started", columnName, tableName, connectionName);
+        DataSourceConfig dataSourceConfig = connectionMap.get(connectionName);
+        DataSource dataSource = jdbcTemplateBuilder.getNewDataSource(dataSourceConfig);
+        oracleManager.setJdbcTemplate(jdbcTemplateBuilder.build(dataSource));
+        return oracleManager.getTableInformation(tableName)
+                .getColumns()
+                .stream()
+                .filter(c -> c.getColumnName().equals(columnName))
+                .findFirst().get()
+                .getDataMinValue();
+    }
+
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public String sqlInConVioExceptionHandler(SQLIntegrityConstraintViolationException e){
+    public String sqlInConVioExceptionHandler(SQLIntegrityConstraintViolationException e) {
         return e.getMessage();
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public String emptyResultDataAccessException(EmptyResultDataAccessException e){
+    public String emptyResultDataAccessException(EmptyResultDataAccessException e) {
         return e.getMessage();
     }
 }

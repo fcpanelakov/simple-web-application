@@ -2,9 +2,9 @@ package cz.nguyenngocanh.aps.rest;
 
 import cz.nguyenngocanh.aps.UnitTestBase;
 import cz.nguyenngocanh.aps.model.Column;
-import cz.nguyenngocanh.aps.model.DataSourceConfig;
 import cz.nguyenngocanh.aps.model.PrimaryKey;
 import cz.nguyenngocanh.aps.model.TableInformation;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -23,18 +23,13 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
     private static final String GET_TABLES_URL = "/database/firstConnection/tables";
     private static final String GET_COLUMNS_URL = "/database/firstConnection/TEST/columns";
     private static final String GET_TABLE_INFO_URL = "/database/firstConnection/TEST/tableinfo";
+    private static final String GET_MEDIAN_URL = "/database/firstConnection/TEST/TEST_THREE/median";
+    private static final String GET_MAX_URL = "/database/firstConnection/TEST/TEST_THREE/max";
+    private static final String GET_MIN_URL = "/database/firstConnection/TEST/TEST_THREE/min";
 
 
     @Test
     public void getSchemasControllerTest() {
-        DataSourceConfig dataSourceConfig = new DataSourceConfig()
-                .setConnectionName("firstConnection")
-                .setUrl("jdbc:h2:mem:testdb")
-                .setUsername("sa")
-                .setPassword("password");
-
-        connectionMap.put(dataSourceConfig);
-
         EntityExchangeResult<List<String>> schemas = webTestClient.get()
                 .uri(GET_SCHEMAS_URL)
                 .accept(MediaType.APPLICATION_JSON)
@@ -50,14 +45,6 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
 
     @Test
     public void getTablesControllerTest() {
-        DataSourceConfig dataSourceConfig = new DataSourceConfig()
-                .setConnectionName("firstConnection")
-                .setUrl("jdbc:h2:mem:testdb")
-                .setUsername("sa")
-                .setPassword("password");
-
-        connectionMap.put(dataSourceConfig);
-
         EntityExchangeResult<List<String>> tables = webTestClient.get()
                 .uri(GET_TABLES_URL)
                 .accept(MediaType.APPLICATION_JSON)
@@ -78,14 +65,6 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
 
     @Test
     public void getColumnsControllerTest() {
-        DataSourceConfig dataSourceConfig = new DataSourceConfig()
-                .setConnectionName("firstConnection")
-                .setUrl("jdbc:h2:mem:testdb")
-                .setUsername("sa")
-                .setPassword("password");
-
-        connectionMap.put(dataSourceConfig);
-
         EntityExchangeResult<List<String>> columns = webTestClient.get()
                 .uri(GET_COLUMNS_URL)
                 .accept(MediaType.APPLICATION_JSON)
@@ -101,14 +80,6 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
 
     @Test
     public void getTableInfoControllerTest() {
-        DataSourceConfig dataSourceConfig = new DataSourceConfig()
-                .setConnectionName("firstConnection")
-                .setUrl("jdbc:h2:mem:testdb")
-                .setUsername("sa")
-                .setPassword("password");
-
-        connectionMap.put(dataSourceConfig);
-
         EntityExchangeResult<TableInformation> tableInfo = webTestClient.get()
                 .uri(GET_TABLE_INFO_URL)
                 .accept(MediaType.APPLICATION_JSON)
@@ -148,5 +119,44 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
                 .setColumns(expectedColumns)
                 .setPrimaryKeys(expectedPrimaryKeys);
         ReflectionAssert.assertReflectionEquals(expectedTableInformation, tableInfo.getResponseBody());
+    }
+
+    @Test
+    public void getMedianControllerTest() {
+        EntityExchangeResult<BigDecimal> median = webTestClient.get()
+                .uri(GET_MEDIAN_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BigDecimal.class)
+                .returnResult();
+
+        Assert.assertEquals(new BigDecimal(3), median.getResponseBody());
+    }
+
+    @Test
+    public void getMaxControllerTest() {
+        EntityExchangeResult<BigDecimal> max = webTestClient.get()
+                .uri(GET_MAX_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BigDecimal.class)
+                .returnResult();
+
+        Assert.assertEquals(new BigDecimal("5.4").setScale(1), max.getResponseBody());
+    }
+
+    @Test
+    public void getMinControllerTest() {
+        EntityExchangeResult<BigDecimal> min = webTestClient.get()
+                .uri(GET_MIN_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BigDecimal.class)
+                .returnResult();
+
+        Assert.assertEquals(new BigDecimal(1), min.getResponseBody());
     }
 }
