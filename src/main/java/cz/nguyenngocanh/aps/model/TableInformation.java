@@ -10,9 +10,9 @@ import java.util.List;
  * columns - All columns of specific table
  */
 public class TableInformation {
-    Integer columnNumber;
-    List<PrimaryKey> primaryKeys;
-    List<Column> columns;
+    private Integer columnNumber;
+    private List<PrimaryKey> primaryKeys;
+    private List<Column> columns;
 
     public Integer getColumnNumber() {
         return columnNumber;

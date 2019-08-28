@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.unitils.reflectionassert.ReflectionAssert;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
                 .setUrl("jdbc:h2:mem:testdb")
                 .setUsername("sa")
                 .setPassword("password");
+
         connectionMap.put(dataSourceConfig);
 
         EntityExchangeResult<List<String>> schemas = webTestClient.get()
@@ -41,6 +43,7 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
                 .expectBody(new ParameterizedTypeReference<List<String>>() {
                 })
                 .returnResult();
+
         List<String> expectedSchemas = Arrays.asList("INFORMATION_SCHEMA", "PUBLIC", "SYS");
         ReflectionAssert.assertReflectionEquals(expectedSchemas, schemas.getResponseBody());
     }
@@ -52,6 +55,7 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
                 .setUrl("jdbc:h2:mem:testdb")
                 .setUsername("sa")
                 .setPassword("password");
+
         connectionMap.put(dataSourceConfig);
 
         EntityExchangeResult<List<String>> tables = webTestClient.get()
@@ -62,6 +66,7 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
                 .expectBody(new ParameterizedTypeReference<List<String>>() {
                 })
                 .returnResult();
+
         List<String> expectedTables = Arrays.asList("FUNCTION_COLUMNS", "CONSTANTS", "SEQUENCES", "RIGHTS", "TRIGGERS", "CATALOGS",
                 "CROSS_REFERENCES", "SETTINGS", "FUNCTION_ALIASES", "VIEWS", "TYPE_INFO", "CONSTRAINTS", "COLUMNS", "LOCKS",
                 "KEY_COLUMN_USAGE", "DOMAINS", "SCHEMATA", "COLUMN_PRIVILEGES", "HELP", "SESSION_STATE", "TABLE_PRIVILEGES",
@@ -78,6 +83,7 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
                 .setUrl("jdbc:h2:mem:testdb")
                 .setUsername("sa")
                 .setPassword("password");
+
         connectionMap.put(dataSourceConfig);
 
         EntityExchangeResult<List<String>> columns = webTestClient.get()
@@ -88,6 +94,7 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
                 .expectBody(new ParameterizedTypeReference<List<String>>() {
                 })
                 .returnResult();
+
         List<String> expectedColumns = Arrays.asList("TEST_ONE", "TEST_TWO", "TEST_THREE", "TEST_FOUR", "TEST_FIVE");
         ReflectionAssert.assertReflectionEquals(expectedColumns, columns.getResponseBody());
     }
@@ -99,6 +106,7 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
                 .setUrl("jdbc:h2:mem:testdb")
                 .setUsername("sa")
                 .setPassword("password");
+
         connectionMap.put(dataSourceConfig);
 
         EntityExchangeResult<TableInformation> tableInfo = webTestClient.get()
@@ -108,11 +116,32 @@ public class DatabaseViewerControllerTest extends UnitTestBase {
                 .expectStatus().isOk()
                 .expectBody(TableInformation.class)
                 .returnResult();
-        List<Column> expectedColumns = Arrays.asList(new Column().setColumnType("VARCHAR").setData(Arrays.asList("ONE")),
-                new Column().setColumnType("VARCHAR").setData(Arrays.asList("TWO")),
-                new Column().setColumnType("DATE").setData(Arrays.asList("2019-08-19")),
-                new Column().setColumnType("VARCHAR").setData(Arrays.asList("FOUR")),
-                new Column().setColumnType("DATE").setData(Arrays.asList("2019-08-19")));
+
+        //Create expected TableInformation
+        List<Column> expectedColumns = Arrays.asList(
+                new Column().setColumnName("TEST_ONE")
+                        .setColumnType("VARCHAR")
+                        .setData(Arrays.asList("FIVE","FOUR","ONE","THREE","TWO")),
+
+                new Column().setColumnName("TEST_TWO")
+                        .setColumnType("VARCHAR")
+                        .setData(Arrays.asList("TWO", "TWO", "TWO", "TWO", "TWO")),
+
+                new Column().setColumnName("TEST_THREE")
+                        .setColumnType("NUMBER")
+                        .setData(Arrays.asList(1, 2, 3, 3.4, 5.4))
+                        .setDataMaxValue(new BigDecimal(5.4))
+                        .setDataMinValue(new BigDecimal(1))
+                        .setDataMedianValue(new BigDecimal(3)),
+
+                new Column().setColumnName("TEST_FOUR")
+                        .setColumnType("VARCHAR")
+                        .setData(Arrays.asList("FOUR","FOUR","FOUR","FOUR","FOUR")),
+
+                new Column().setColumnName("TEST_FIVE")
+                        .setColumnType("DATE")
+                        .setData(Arrays.asList("2019-08-19", "2019-08-19", "2019-08-19", "2019-08-19", "2019-08-19")));
+
         List<PrimaryKey> expectedPrimaryKeys = Arrays.asList(new PrimaryKey().setName("TEST_PK").setType("PRIMARY KEY"));
         TableInformation expectedTableInformation = new TableInformation()
                 .setColumnNumber(5)

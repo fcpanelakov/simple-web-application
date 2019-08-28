@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,7 +60,6 @@ public class OracleDatabaseViewerManager implements DatabaseViewerManager {
     }
 
     /**
-     *
      * @param tableName - Name of specific table
      * @return Table information, contains all his primary keys, number of columns, columns(type, data)
      */
@@ -70,17 +71,59 @@ public class OracleDatabaseViewerManager implements DatabaseViewerManager {
         List<String> columnsNames = getColumns(tableName);
         List<Column> columns = columnsNames
                 .stream()
-                .map(cName -> {
-                    List<String> data = jdbcTemplate.queryForList("SELECT " + cName + " FROM " + tableName, String.class);
-                    String type = jdbcTemplate.queryForObject(GET_COLUMN_DATA_TYPE, String.class, tableName, cName);
-                    return new Column()
-                            .setColumnType(type)
-                            .setData(data);
-                }).collect(Collectors.toList());
+                .map(cName -> getNewColumn(cName, tableName)
+                ).collect(Collectors.toList());
 
         return tableInformation.setColumnNumber(columnsNames.size())
                 .setColumns(columns)
                 .setPrimaryKeys(primaryKeys);
+    }
+
+    /**
+     * Create column
+     * @param cName Column name
+     * @param tableName
+     * @return Column with data from database
+     */
+    private Column getNewColumn(String cName, String tableName){
+        String type = jdbcTemplate.queryForObject(GET_COLUMN_DATA_TYPE, String.class, tableName, cName);
+        if(type.contains(Column.TYPE_NUMBER)) {
+            List<BigDecimal> data = jdbcTemplate.queryForList("SELECT " + cName + " FROM " + tableName, BigDecimal.class);
+            BigDecimal maxValue = Collections.max(data);
+            BigDecimal minValue = Collections.min(data);
+            BigDecimal medianValue = median(data);
+            return new Column<BigDecimal>()
+                    .setColumnName(cName)
+                    .setColumnType(type)
+                    .setData(data)
+                    .setDataMaxValue(maxValue)
+                    .setDataMinValue(minValue)
+                    .setDataMedianValue(medianValue);
+        }
+        List<String> data = jdbcTemplate.queryForList("SELECT " + cName + " FROM " + tableName, String.class);
+        return new Column<String>()
+                .setColumnName(cName)
+                .setColumnType(type)
+                .setData(data);
+    }
+
+    /**
+     * Perform sort and median counting
+     * @param values
+     * @return Median value
+     */
+    private BigDecimal median(List<BigDecimal> values){
+        Collections.sort(values);
+        BigDecimal median;
+        int listSize = values.size();
+        if (listSize % 2 == 0) {
+            BigDecimal sumMiddleValues = values.get(listSize / 2).add(values.get(listSize / 2 - 1));
+            median = (sumMiddleValues).divide(new BigDecimal(2));
+        } else {
+            // get the middle element
+            median = values.get(listSize / 2);
+        }
+        return median;
     }
 
 }

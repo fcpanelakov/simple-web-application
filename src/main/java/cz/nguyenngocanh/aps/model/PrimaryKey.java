@@ -5,8 +5,8 @@ package cz.nguyenngocanh.aps.model;
  * Primary key data type
  */
 public class PrimaryKey {
-    String name;
-    String type;
+    private String name;
+    private String type;
 
     public String getName() {
         return name;
